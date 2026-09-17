@@ -1,0 +1,19 @@
+# Environment variables
+.env
+
+# Raw data - documented in README how to obtain instead
+data/raw/*
+!data/raw/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
