@@ -65,13 +65,7 @@ def analyze_dimension(engine, dim_key: str, year: int, month_a: int, month_b: in
 
     return pd.read_sql(query, engine)
 
-
 def find_root_cause(year: int, month_a: int, month_b: int, top_n: int = 3) -> dict:
-    """
-    Runs the analysis across ALL dimensions, finds the single biggest driver
-    across all of them (not just within one dimension), and returns a
-    structured finding — this is what eventually gets handed to the LLM.
-    """
     engine = get_engine()
     all_results = []
 
@@ -81,7 +75,20 @@ def find_root_cause(year: int, month_a: int, month_b: int, top_n: int = 3) -> di
 
     combined = pd.concat(all_results, ignore_index=True)
 
-    # The single row with the largest absolute dollar change, across ALL dimensions
+    total_a = combined["period_a_revenue"].sum()
+    total_b = combined["period_b_revenue"].sum()
+
+    if total_a == 0 or total_b == 0:
+        return {
+            "period": f"{month_a}/{year} vs {month_b}/{year}",
+            "error": "insufficient_data",
+            "message": (
+                f"One or both periods have no revenue data "
+                f"(month {month_a}: {total_a}, month {month_b}: {total_b}). "
+                f"Comparison is not meaningful."
+            ),
+        }
+
     top_driver = combined.reindex(combined["change"].abs().sort_values(ascending=False).index).iloc[0]
 
     return {
