@@ -18,3 +18,14 @@ precomputed, verified finding.
 Raw Olist dataset not included in repo (see `.gitignore`). Download from
 [Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) and
 extract into `data/raw/`.
+
+## Planned Enhancements
+- Order count / AOV decomposition (distinguish demand vs. pricing effects)
+- Year-over-year comparison support
+- Explicit surfacing of offsetting/opposite-direction movers in findings
+- Natural-language query layer: map free-text questions ("why did sales drop 
+  on X date", "show me electronics revenue") to a fixed set of safe, 
+  pre-defined query intents + extracted parameters (category, date range). 
+  LLM maps text -> structured intent only; it never decides what analysis 
+  to run or interprets causality itself — that logic stays in deterministic 
+  code, preserving the core "LLM narrates, never reasons" principle.
